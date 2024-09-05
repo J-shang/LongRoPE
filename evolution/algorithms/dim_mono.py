@@ -12,7 +12,7 @@ class DimMonoGeneticAlgorithm(GeneticAlgorithm):
 
     def mutate(self, indv: Individual) -> Individual:
         list_step = self.list_step
-        evo_list = np.arange(1.0, 1.0 + self.scale + list_step, list_step)
+        evo_list = np.arange(1.0, self.scale + list_step, list_step)
 
         new_factors = indv.factors
         while ((Individual(new_factors) in self.history) or (not np.all(np.diff(new_factors) >= 0))):

@@ -12,6 +12,6 @@ pandas
 einops
 tqdm
 mlflow
-flash-attn
+flash-attn==2.5.6
 tiktoken
 pytest

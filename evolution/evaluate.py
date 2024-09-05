@@ -33,7 +33,7 @@ def main(args):
     logger.info(f"Loading tokenized dataset: {args.tokenized}")
     dataset = datasets.load_from_disk(args.tokenized)
     if args.dataset_min_tokens:
-        dataset = dataset.filter(lambda x: x["tokenized_len"] >= args.dataset_min_tokens if "tokenized_len" in x else len("input_ids") >= args.dataset_min_tokens, num_proc=args.num_proc)
+        dataset = dataset.filter(lambda x: x["tokenized_len"] >= args.dataset_min_tokens if "tokenized_len" in x else len(x["input_ids"]) >= args.dataset_min_tokens, num_proc=args.num_proc)
     if args.samples:
         dataset = dataset[:args.samples]
 

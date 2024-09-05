@@ -50,7 +50,6 @@ class LongRoPEScaledRotaryEmbedding(torch.nn.Module):
             self.mscale = calc_mscale(self.max_position_embeddings / self.original_max_position_embeddings)
         else:
             self.mscale = torch.tensor([*mscale_factors, *mscale_factors], dtype=torch.float32, device=device)
-            print(self.mscale)
 
         self.rescale_factors = torch.tensor(rescale_factors, dtype=torch.float32, device=device)
         assert self.rescale_factors.shape == (self.dim // 2, ), \
