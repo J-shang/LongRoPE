@@ -12,18 +12,28 @@ class DimMonoGeneticAlgorithm(GeneticAlgorithm):
 
     def mutate(self, indv: Individual) -> Individual:
         list_step = self.list_step
-        evo_list = np.arange(1.0, self.scale + list_step, list_step)
+        def ceil_dim_value(dim_value, dim):
+            step = self.list_step[dim]
+            if self.dim_search_space is not None:
+                dim_value = max(self.dim_search_space[0], min(dim_value, self.dim_search_space[1]))
+            return dim_value // step * step + (0 if dim_value % step < 1e-10 else step)
+
+        def floor_dim_value(dim_value, dim):
+            step = self.list_step[dim]
+            if self.dim_search_space is not None:
+                dim_value = max(self.dim_search_space[0], min(dim_value, self.dim_search_space[1]))
+            return dim_value // step * step
 
         new_factors = indv.factors
         while ((Individual(new_factors) in self.history) or (not np.all(np.diff(new_factors) >= 0))):
             for dim in range(new_factors.shape[0]):
                 if np.random.rand() < 0.3:
                     if dim == 0:
-                        evo_list_curr = np.arange(1.0, new_factors[dim + 1], list_step)
+                        evo_list_curr = np.arange(ceil_dim_value(1.0, dim), floor_dim_value(new_factors[dim + 1], dim) + list_step[dim], list_step[dim])
                     elif dim == new_factors.shape[0] - 1:
-                        evo_list_curr = np.arange(new_factors[dim - 1], evo_list.max() + list_step, list_step)
+                        evo_list_curr = np.arange(ceil_dim_value(new_factors[dim - 1], dim), floor_dim_value(self.scale, dim) + list_step[dim], list_step[dim])
                     else:
-                        evo_list_curr = np.arange(new_factors[dim - 1], new_factors[dim + 1] + list_step, list_step)
+                        evo_list_curr = np.arange(ceil_dim_value(new_factors[dim - 1], dim), floor_dim_value(new_factors[dim + 1], dim) + list_step[dim], list_step[dim])
 
                     if evo_list_curr.shape[0] > 0:
                         layer_index = np.random.randint(0, evo_list_curr.shape[0])

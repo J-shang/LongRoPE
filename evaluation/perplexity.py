@@ -48,6 +48,10 @@ def compute_perplexity(
         max_tokenized_len = num_tokens
 
     encoded_texts = dataset["input_ids"]
+    if "cus_labels" in dataset:
+        cus_labels = dataset["cus_labels"]
+    else:
+        cus_labels = None
 
     if num_tokens and truncate:
         encoded_texts = [x[:max_tokenized_len] for x in encoded_texts]
@@ -56,9 +60,11 @@ def compute_perplexity(
     pbar = tqdm(total=len(encoded_texts), disable=logger.level <= logging.INFO)
 
     nlls = []
-    for encoded_text in encoded_texts:
-
-        labels = torch.tensor([encoded_text], device=device)
+    for i, encoded_text in enumerate(encoded_texts):
+        if cus_labels is not None:
+            labels = torch.tensor([cus_labels[i]], device=device)
+        else:
+            labels = torch.tensor([encoded_text], device=device)
         seq_len = labels.size(1)
         seq_len = min(seq_len, max_sliding_count * sliding_window)
 

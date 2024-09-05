@@ -144,6 +144,7 @@ class GeneticAlgorithm:
         output_dir: str,
         recovery: str = None,
         rope_searched_arg_name: str = "rescale_factors",
+        dim_search_space: list[tuple[float, float]] = None,
     ):
         self.queue = EvaluatorQueue(evaluators)
         self.scale = scale
@@ -158,7 +159,9 @@ class GeneticAlgorithm:
         self.crossover_size = int(evo_scale * hyper_params["crossover_size"])        # 交叉操作数量
         self.max_crossover_try = int(evo_scale * hyper_params["max_crossover_try"])  # 交叉重试次数
         self.parents_size = int(evo_scale * hyper_params["parents_size"])            # 亲代数量
-        self.list_step = hyper_params["list_step"]                                   # 搜索空间粒度
+        list_step = hyper_params["list_step"]                                        # 搜索空间粒度
+        self.list_step = [list_step] * init_factors.shape[0] if isinstance(list_step, (int, float)) else list_step
+        assert len(self.list_step) == init_factors.shape[0]
         assert self.parents_size <= self.population_size, \
             f'Number of parents ({self.parents_size}) should not be larger than population size ({self.population_size})'
 
@@ -170,6 +173,8 @@ class GeneticAlgorithm:
         self.log_json_path = log_json_path
         self.output_dir = output_dir
         self.rope_searched_arg_name = rope_searched_arg_name
+        assert dim_search_space is None or all(x < y for x, y in dim_search_space)
+        self.dim_search_space = dim_search_space
 
     def preprocess_init_factors(self, factors: np.ndarray) -> np.ndarray:
         return factors
