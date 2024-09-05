@@ -178,7 +178,7 @@ def main(args):
                 init_factors, length_scale = select_init_factors(evaluators[0], init_factors, length_scale, rope_args)
                 rope_args['max_position_embeddings'] = int(length_scale * original_length)
         # critical dimension
-        critical_dim = (math.log(original_length / 2 / math.pi, rope_base) * head_size / 2)
+        critical_dim = math.ceil(math.log(original_length / 2 / math.pi, rope_base) * head_size / 2)
         critical_dim_min_scale = target_length / original_length
         dim_search_space = [(1.0, critical_dim_min_scale + 5.0)] * critical_dim + [(critical_dim_min_scale, length_scale)] * (head_size // 2 - critical_dim)
     else:
