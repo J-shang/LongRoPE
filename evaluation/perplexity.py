@@ -48,11 +48,9 @@ def compute_perplexity(
         max_tokenized_len = num_tokens
 
     encoded_texts = dataset["input_ids"]
-    attn_masks = dataset["attention_mask"]
 
     if num_tokens and truncate:
         encoded_texts = [x[:max_tokenized_len] for x in encoded_texts]
-        attn_masks = [x[:max_tokenized_len] for x in attn_masks]
         sliding_window = max_tokenized_len
 
     pbar = tqdm(total=len(encoded_texts), disable=logger.level <= logging.INFO)
@@ -110,7 +108,7 @@ def main(args):
     logger.info(f"Loading tokenized dataset: {args.tokenized}")
     dataset = datasets.load_from_disk(args.tokenized)
     if args.dataset_min_tokens:
-        dataset = dataset.filter(lambda x: x["tokenized_len"] >= args.dataset_min_tokens, num_proc=args.num_proc)
+        dataset = dataset.filter(lambda x: x["tokenized_len"] >= args.dataset_min_tokens if "tokenized_len" in x else len("input_ids") >= args.dataset_min_tokens, num_proc=args.num_proc)
     if args.samples:
         dataset = dataset[:args.samples]
 

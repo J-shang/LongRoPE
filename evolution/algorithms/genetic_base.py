@@ -143,6 +143,7 @@ class GeneticAlgorithm:
         log_json_path: str,
         output_dir: str,
         recovery: str = None,
+        rope_searched_arg_name: str = "rescale_factors",
     ):
         self.queue = EvaluatorQueue(evaluators)
         self.scale = scale
@@ -168,6 +169,7 @@ class GeneticAlgorithm:
         self.recovery = recovery
         self.log_json_path = log_json_path
         self.output_dir = output_dir
+        self.rope_searched_arg_name = rope_searched_arg_name
 
     def preprocess_init_factors(self, factors: np.ndarray) -> np.ndarray:
         return factors
@@ -189,7 +191,7 @@ class GeneticAlgorithm:
         rescale_factors = self.extract_factors(factors).tolist()
         rope_args={
             'rope_class': 'LongRoPEScaledRotaryEmbedding',
-            'rescale_factors': rescale_factors,
+            self.rope_searched_arg_name: rescale_factors,
             **self.rope_args,
         }
         self.queue.push(indv, rope_args)
