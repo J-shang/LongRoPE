@@ -55,7 +55,8 @@ def compute_perplexity(
 
     if num_tokens and truncate:
         encoded_texts = [x[:max_tokenized_len] for x in encoded_texts]
-        sliding_window = max_tokenized_len
+        cus_labels = [x[:max_tokenized_len] for x in cus_labels] if cus_labels is not None else cus_labels
+        sliding_window = max_tokenized_len + 1 if add_start_token else max_tokenized_len
 
     pbar = tqdm(total=len(encoded_texts), disable=logger.level <= logging.INFO)
 
