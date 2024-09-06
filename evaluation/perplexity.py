@@ -61,6 +61,7 @@ def compute_perplexity(
 
     nlls = []
     for i, encoded_text in enumerate(encoded_texts):
+        inputs = torch.tensor([encoded_text], device=device)
         if cus_labels is not None:
             labels = torch.tensor([cus_labels[i]], device=device)
         else:
@@ -74,13 +75,14 @@ def compute_perplexity(
 
             end_loc = min(begin_loc + max_tokenized_len, seq_len)
             trg_len = end_loc - prev_end_loc
-            input_ids = labels[:, begin_loc:end_loc]
+            input_ids = inputs[:, begin_loc:end_loc]
+            target_ids = labels[:, begin_loc:end_loc]
 
             if add_start_token:
                 bos_tokens_tensor = torch.tensor([[tokenizer.bos_token_id]] * input_ids.size(0), device=device)
                 input_ids = torch.cat([bos_tokens_tensor, input_ids], dim=1)
+                target_ids = torch.cat([bos_tokens_tensor, target_ids], dim=1)
 
-            target_ids = input_ids.clone()
             target_ids[:, :-trg_len] = -100
 
             with torch.no_grad():

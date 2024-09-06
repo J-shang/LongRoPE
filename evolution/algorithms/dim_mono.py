@@ -15,13 +15,13 @@ class DimMonoGeneticAlgorithm(GeneticAlgorithm):
         def ceil_dim_value(dim_value, dim):
             step = self.list_step[dim]
             if self.dim_search_space is not None:
-                dim_value = max(self.dim_search_space[0], min(dim_value, self.dim_search_space[1]))
+                dim_value = max(self.dim_search_space[dim][0], min(dim_value, self.dim_search_space[dim][1]))
             return dim_value // step * step + (0 if dim_value % step < 1e-10 else step)
 
         def floor_dim_value(dim_value, dim):
             step = self.list_step[dim]
             if self.dim_search_space is not None:
-                dim_value = max(self.dim_search_space[0], min(dim_value, self.dim_search_space[1]))
+                dim_value = max(self.dim_search_space[dim][0], min(dim_value, self.dim_search_space[dim][1]))
             return dim_value // step * step
 
         new_factors = indv.factors
