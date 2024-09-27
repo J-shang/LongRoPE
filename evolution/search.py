@@ -177,10 +177,15 @@ def main(args):
             if args.auto_rescale_init_factors:
                 init_factors, length_scale = select_init_factors(evaluators[0], init_factors, length_scale, rope_args)
                 rope_args['max_position_embeddings'] = int(length_scale * original_length)
-        # critical dimension
-        critical_dim = math.ceil(math.log(original_length / 2 / math.pi, rope_base) * head_size / 2)
+        
+        if args.critical_dim is not None:
+            critical_dim = args.critical_dim
+        else:
+            critical_dim = math.ceil(math.log(original_length / 2 / math.pi, rope_base) * head_size / 2) - 1
         critical_dim_min_scale = target_length / original_length
         dim_search_space = [(1.0, critical_dim_min_scale + 5.0)] * critical_dim + [(critical_dim_min_scale, length_scale)] * (head_size // 2 - critical_dim)
+        if args.init_mscales is not None:
+            rope_args['mscale_factors'] = np.loadtxt(open(args.init_mscales, "rb"), delimiter=",", skiprows=0).tolist()
     else:
         assert args.rope_searched_arg_name == "mscale_factors", "Only support search rescale_factors and mscale_factors."
         assert args.init_factors is not None, "Before searching mscales, must give a group rescale factors at first for current version."
@@ -262,6 +267,7 @@ if __name__ == "__main__":
     parser.add_argument("--devices", type=str, default=None)
     parser.add_argument("--init-mscales", type=str, default=None)
     parser.add_argument("--rope-searched-arg-name", type=str, default="rescale_factors")  # ["mscale_factors", "rescale_factors"]
+    parser.add_argument("--critical-dim", type=int, default=None)
     args = parser.parse_args()
     args.timestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
 
