@@ -145,6 +145,7 @@ class GeneticAlgorithm:
         recovery: str = None,
         rope_searched_arg_name: str = "rescale_factors",
         dim_search_space: list[tuple[float, float]] = None,
+        critical_dim: int = None
     ):
         self.queue = EvaluatorQueue(evaluators)
         self.scale = scale
@@ -175,6 +176,8 @@ class GeneticAlgorithm:
         self.rope_searched_arg_name = rope_searched_arg_name
         assert dim_search_space is None or all(x < y for x, y in dim_search_space)
         self.dim_search_space = dim_search_space
+
+        self.critical_dim = critical_dim
 
     def preprocess_init_factors(self, factors: np.ndarray) -> np.ndarray:
         return factors
@@ -239,13 +242,25 @@ class GeneticAlgorithm:
         if self.recovery is None:
             population = []
             latest_iteration = 0
-            pbar = tqdm(range(self.population_size), desc=f'Generate Initial Population')
+            # pbar = tqdm(range(self.population_size), desc=f'Generate Initial Population')
+            pbar = tqdm(range(self.population_size * 2), desc=f'Generate Initial Population')
             for i in pbar:
-                if i == 0:
-                    indv = self.make_indv(self.init_factors)
-                    new_indv = indv
+                # if i == 0:
+                #     indv = self.make_indv(self.init_factors)
+                #     new_indv = indv
+                # else:
+                #     new_indv = self.mutate(indv)
+
+                total_dim, cd_dim, init_scale = self.init_factors.shape[0], self.critical_dim, 64
+                def ntk_init(total_dim, cd_dim, scale):
+                    ext = scale ** (total_dim / cd_dim)
+                    return [ext ** (i / total_dim) for i in range(cd_dim)] + [scale + 0.1 * i for i in range(total_dim - cd_dim)]
+
+                if i < 8:
+                    new_indv = self.make_indv(np.array(ntk_init(total_dim, cd_dim, init_scale + i * 4)))
                 else:
-                    new_indv = self.mutate(indv)
+                    new_indv = self.mutate(population[i-8])
+
                 population.append(new_indv)
                 self.history.append(new_indv)
                 if new_indv.ppl is not None:

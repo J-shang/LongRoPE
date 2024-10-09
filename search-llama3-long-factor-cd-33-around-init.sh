@@ -19,6 +19,6 @@ python evolution/search.py \
     --init-factors /scratch/amlt_code/LongRoPE/llama3-ntk-cd-init-128k.csv \
     --length-scale $LENGTH_SCALE \
     --num-proc 16 \
-    --critical-dim 33 \
+    --critical-dim $CRITICAL_DIM \
     --hyper-params /scratch/amlt_code/LongRoPE/evolution/default_hyper_params/dim_mono_llama.json \
     --save-memory

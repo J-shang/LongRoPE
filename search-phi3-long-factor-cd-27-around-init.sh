@@ -19,4 +19,4 @@ python evolution/search.py \
     --init-factors /scratch/amlt_code/LongRoPE/longrope_multi_init.csv \
     --length-scale $LENGTH_SCALE \
     --num-proc 16 \
-    --critical-dim 27
+    --critical-dim $CRITICAL_DIM

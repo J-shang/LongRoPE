@@ -212,6 +212,7 @@ def main(args):
             recovery=args.recovery,
             rope_searched_arg_name=args.rope_searched_arg_name,
             dim_search_space=dim_search_space,
+            critical_dim=critical_dim
         ).run_genetic_algorithm()[2:]
     elif args.algorithm == "dim_mono":
         final_factors = DimMonoGeneticAlgorithm(
@@ -226,6 +227,7 @@ def main(args):
             recovery=args.recovery,
             rope_searched_arg_name=args.rope_searched_arg_name,
             dim_search_space=dim_search_space,
+            critical_dim=critical_dim
         ).run_genetic_algorithm()
     else:
         raise ValueError(f'Unsupported evolution search algorithm: {args.algorithm}')
