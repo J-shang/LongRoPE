@@ -1,4 +1,4 @@
-MODEL_PATH=/mnt/nishang/models/mistral_version/
+# MODEL_PATH=/mnt/nishang/models/mistral_version/
 # DATASET_PATH=/mnt/nishang/datasets/pg19-train-128k-search-phi31-tokenized-hf/
 # RESULT_PATH=/mnt/nishang/longrope1-search/phi31-mscale/longrope-scale-72-init-1.19-init
 mkdir -p $RESULT_PATH
