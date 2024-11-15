@@ -3,7 +3,7 @@ DATASET_PATH=/scratch/nishang/datasets/pg19-train-128k-search-phi4-omni-tokenize
 
 TARGET_LENGTH=131072
 LENGTH_SCALE=64
-CRITICAL_DIM=30
+CRITICAL_DIM=32
 
 RESULT_PATH=/scratch/nishang/longrope-search/phi4-omni-mscale/critical_dim_$CRITICAL_DIM/
 
@@ -21,7 +21,6 @@ python evolution/search.py \
     --attn-implementation flash_attention_2 \
     --attn-sliding-window $TARGET_LENGTH \
     --model-size-gb 10 \
-    --init-factors /scratch/nishang/LongRoPE/llama3-ntk-cd-init-128k.csv \
     --length-scale $LENGTH_SCALE \
     --num-proc 16 \
     --save-memory \
