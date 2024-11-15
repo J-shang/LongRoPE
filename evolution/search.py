@@ -130,6 +130,7 @@ def main(args):
         if not (config.model_type == 'llama' or config.model_type == 'phi3'):
             logger.warning(f'Setting model type to llama for unrecognized model type: {config.model_type}')
         rope_model_type = 'llama'
+    rope_model_type = 'llama'
 
     rope_args = {
         'dim': head_size,

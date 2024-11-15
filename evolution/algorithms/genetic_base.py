@@ -251,13 +251,13 @@ class GeneticAlgorithm:
                 # else:
                 #     new_indv = self.mutate(indv)
 
-                total_dim, cd_dim, init_scale = self.init_factors.shape[0], self.critical_dim, 64
+                total_dim, cd_dim, init_scale = self.init_factors.shape[0], self.critical_dim, 32
                 def ntk_init(total_dim, cd_dim, scale):
                     ext = scale ** (total_dim / cd_dim)
                     return [ext ** (i / total_dim) for i in range(cd_dim)] + [scale + 0.1 * i for i in range(total_dim - cd_dim)]
 
                 if i < 8:
-                    new_indv = self.make_indv(np.array(ntk_init(total_dim, cd_dim, init_scale + i * 4)))
+                    new_indv = self.make_indv(np.array(ntk_init(total_dim, cd_dim, init_scale + i * 3)))
                 else:
                     new_indv = self.mutate(population[i-8])
 
