@@ -257,7 +257,7 @@ class GeneticAlgorithm:
                     return [ext ** (i / total_dim) for i in range(cd_dim)] + [scale + 0.1 * i for i in range(total_dim - cd_dim)]
 
                 if i < 8:
-                    new_indv = self.make_indv(np.array(ntk_init(total_dim, cd_dim, init_scale + i * 3)))
+                    new_indv = self.make_indv(np.array(ntk_init(total_dim, cd_dim, init_scale + i * (init_scale / 10))))
                 else:
                     new_indv = self.mutate(population[i-8])
 

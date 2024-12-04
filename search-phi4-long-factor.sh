@@ -1,9 +1,9 @@
-MODEL_PATH=/scratch/nishang/models/pgqa-tp1pp1-3000b-gbs8388608-mbs2-lr5e-4-HF
-DATASET_PATH=/scratch/nishang/datasets/pg19-train-128k-search-phi4-omni-tokenized-hf
+MODEL_PATH=/scratch/nishang/models/phi_omni-218000-mistral-newtokenizer-no-flash
+DATASET_PATH=/scratch/nishang/datasets/pg19-train-128k-search-phi-omni-new-tokenized-hf
 
 TARGET_LENGTH=131072
 LENGTH_SCALE=64
-CRITICAL_DIM=32
+CRITICAL_DIM=25
 
 RESULT_PATH=/scratch/nishang/longrope-search/phi4-omni-mscale/critical_dim_$CRITICAL_DIM/
 

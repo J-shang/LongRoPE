@@ -115,7 +115,7 @@ def main(args):
 
     logger.info(f"Loading model config: {args.model}")
     config = transformers.AutoConfig.from_pretrained(args.model, trust_remote_code=True)
-    head_size = config.hidden_size // config.num_attention_heads
+    head_size = (config.hidden_size // config.num_attention_heads) if config.rope_dim is None else config.rope_dim
     half_head_size = head_size // 2
     target_length = int(args.target_length)
     if hasattr(config, 'sliding_window') and config.sliding_window is not None:
